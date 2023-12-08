@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="utf-8">
+   <title>Simple Calculator</title>
+   <link rel="stylesheet" href="simple-calculator.css">
+  <nav>
+    <ul>
+      <a href="online-calculator.html">Home Page</a>
+      <a href="matrix-calculator.html">Matrix Operations</a>
+      <a href="2dgraphing-calculator.html">2D Graphing</a>
+      <a href="3dgraphing-calculator.html">3D Graphing</a>
+    </ul>
+    </nav>
+</head>
+<body>
+  <header>
+    <h1>Simple Calculator</h1>
+  </header>
+  <section>
+    <!-- Create input and output boxes and buttons -->
+    <p>Inputs for Binary Operations:</p>
+    <input type="number" id="Input1" name="Input">
+    <input type="number" id="Input2" name="Input">
+    <button onClick="add()"type="button">+</button>
+    <button onClick="subtract()"type="button">-</button>
+    <button onClick="multiply()"type="button">*</button>
+    <button onClick="divide()"type="button">/</button>
+    <button onClick="exp()"type="button">a^b</button>
+    <p>Output:</p>
+    <p><input type="number" id="Output1" name="Output1" readonly></p>
+
+    <p>Inputs for Unary Operations:</p>
+    <input type="number" id="Input3" name="Input">
+    <button onClick="abs()"type="button">|x|</button>
+    <button onClick="sin()"type="button">sin</button>
+    <button onClick="cos()"type="button">cos</button>
+    <button onClick="tan()"type="button">tan</button>
+    <button onClick="sqrt()"type="button">sqrt</button>
+    <p>Output:</p>
+    <p><input type="number" id="Output2" name="Output2" readonly></p>
+    <!-- Script to handle different operations -->
+    <!-- Specifies outputs have to have a maximum of nine decimal places.-->
+    <script>
+      function add(){
+        var x = document.getElementById("Input1").value;
+        var y = document.getElementById("Input2").value;
+        var z = Number(x)+Number(y);
+        z  = `${Number.parseFloat((z).toFixed(9))}`;
+        document.getElementById("Output1").value = z;
+      }
+      function subtract(){
+        var x = document.getElementById("Input1").value;
+        var y = document.getElementById("Input2").value;
+        var z = Number(x)-Number(y);
+        z  = `${Number.parseFloat(z.toFixed(9))}`;
+        document.getElementById("Output1").value = z;
+      }
+      function multiply(){
+        var x = document.getElementById("Input1").value;
+        var y = document.getElementById("Input2").value;
+        var z = (Number(x)*Number(y));
+        z  = `${Number.parseFloat(z.toFixed(9))}`;
+        document.getElementById("Output1").value = z;
+      }
+      function divide(){
+        var x = document.getElementById("Input1").value;
+        var y = document.getElementById("Input2").value;
+        // Reject inputs that divide by zero and /0 is undefined
+        if (y == 0) {
+          alert("Division by zero is undefined.");
+          return;
+        }
+        var z = (Number(x)/Number(y));
+        z  = `${Number.parseFloat(z.toFixed(9))}`;
+        document.getElementById("Output1").value = z;
+      }
+      function exp(){
+        var x = document.getElementById("Input1").value;
+        var y = document.getElementById("Input2").value;
+        var z = Math.pow(x, y);
+        z  = `${Number.parseFloat(z.toFixed(9))}`;
+        document.getElementById("Output1").value = z;
+      }
+      function abs(){
+        var x = document.getElementById("Input3").value;
+        var z = Math.abs(x);
+        z  = `${Number.parseFloat(z.toFixed(9))}`;
+        document.getElementById("Output2").value = z;
+      }
+      function sin(){
+        var x = document.getElementById("Input3").value;
+        var z = Math.sin(x*Math.PI/180);
+        z  = `${Number.parseFloat(z.toFixed(9))}`;
+        document.getElementById("Output2").value = z;
+      }
+      function cos(){
+        var x = document.getElementById("Input3").value;
+        var z = Math.cos(x*Math.PI/180);
+        z  = `${Number.parseFloat(z.toFixed(9))}`;
+        document.getElementById("Output2").value = z;
+      }
+      function tan(){
+        var x = document.getElementById("Input3").value;
+        // Reject inputs where cos(x) = 0 as tan(x) would be undefined
+        if (Math.abs(Math.cos(x*Math.PI/180)) < 0.000000001)  {
+          alert("tan(x) is undefined when cos(x) = 0.");
+          return;
+        }
+        var z = Math.tan(x*Math.PI/180);
+        z  = `${Number.parseFloat(z.toFixed(9))}`;
+        document.getElementById("Output2").value = z;
+      }
+      function sqrt(){
+        var x = document.getElementById("Input3").value;
+        // Reject negative inputs as sqrt(x) has no real solutions
+        if (x < 0) {
+          alert("There are no real solutions for a square root of a negative number.");
+          return;
+        }
+        var z = Math.sqrt(x);
+        z  = `${Number.parseFloat(z.toFixed(9))}`;
+        document.getElementById("Output2").value = z;
+      }
+    </script>
+  </section>
+  <footer>
+      <ul>Notes:
+      <li>All trigonometric functions should be entered in degrees.</li>
+      <li>All calculations are rounded to 9 decimal places.</li>
+      </ul>
+     <p>Created by Sean Gaughan</p>
+  </footer>
+</body>

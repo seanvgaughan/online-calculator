@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>2D Graphing Calculator</title>
+    <link rel="stylesheet" href="2dgraphing-calculator.css" />
+    <nav>
+        <ul>
+          <a href="online-calculator.html">Home Page</a>
+          <a href="simple-calculator.html">Simple Calculator</a>
+          <a href="matrix-calculator.html">Matrix Operations</a>
+          <a href="3dgraphing-calculator.html">3D Graphing</a>
+        </ul>
+        </nav>
+</head>
+<body>
+    <header>
+        <h1>2D Graphing Calculator</h1>
+    </header>
+    <section>
+        <!-- Create canvas for graphing and form to accept inputs-->
+        <canvas id="graph" width="500" height="500"></canvas>
+        <form>
+            <label for="xMin">Min x value:</label>
+            <input type="number" id="xMin" name="xMin">
+
+            <label for="xMax">Max x value:</label>
+            <input type="number" id="xMax" name="xMax"><br>
+
+            <label for="yMin">Min y value:</label>
+            <input type="number" id="yMin" name="yMin">
+
+            <label for="yMax">Max y value:</label>
+            <input type="number" id="yMax" name="yMax"><br>
+
+            <label for="function">Enter a function:</label>
+            <input type="text" id="function" name="function">
+            <button type="button" onclick="drawGraph()">Graph</button>
+        </form>
+        <script type="text/javascript">
+            function drawGraph() {
+                // Create new canvas and clear old canvas
+                var canvas = document.getElementById('graph');
+                var context = canvas.getContext('2d');
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                var funcInput = document.getElementById('function').value;
+                var xMin = parseFloat(document.getElementById('xMin').value);
+                var xMax = parseFloat(document.getElementById('xMax').value);
+                var yMin = parseFloat(document.getElementById('yMin').value);
+                var yMax = parseFloat(document.getElementById('yMax').value);
+
+                // Check for invalid range
+                if (xMax < xMin) {
+                    alert("Max x value must be greater than min x value.");
+                    return;
+                }
+                if (yMax < yMin) {
+                    alert("Max y value must be greater than min y value.");
+                    return;
+                }
+
+                // Calculate x and y ranges
+                var xRange = xMax - xMin;
+                var yRange = yMax - yMin;
+
+                // Calculate factors to convert points from coordinate plane to canvas
+                var yscale = canvas.height / yRange;
+                var xscale = canvas.width / xRange;
+
+                // Draw x and y axes
+                // Multiply by -yMin to shift points to make bottom of canvas = ymin
+                // Multiply by -xMin to shift points to make left side of canvas = xmin
+                context.strokeStyle = 'black';
+                context.beginPath();
+                context.moveTo(0, yscale * (-yMin));
+                context.lineTo(canvas.width, yscale * (-yMin));
+                context.stroke();
+
+                context.beginPath();
+                context.moveTo(xscale * (-xMin), 0);
+                context.lineTo(xscale * (-xMin), canvas.height);
+                context.stroke();
+
+                // Draw graph of function
+                context.beginPath();
+                context.strokeStyle = 'red';
+                context.lineWidth = 2;
+                // Set number of points on the graph to be 200
+
+                // for loop to plot points
+                for (var x = xMin; x <= xMax; x += 0.1) {
+                    // eval function converts to math expression and gets y value for given x
+                    // replace input to be readable
+                    var y = eval(funcInput
+                        // replace 'x' or 'X' with value of x
+                        .replace(/x/g, '(' + x + ')')
+                        .replace(/X/g, '(' + x + ')')
+                        // replace ^ for exponents
+                        .replace(/\^/g, '**')
+                        // replace trig equations
+                        .replace(/sin\(/g, 'Math.sin(')
+                        .replace(/cos\(/g, 'Math.cos(')
+                        .replace(/tan\(/g, 'Math.tan(')
+                        .replace(/asin\(/g, 'Math.asin(')
+                        .replace(/acos\(/g, 'Math.acos(')
+                        .replace(/atan\(/g, 'Math.atan(')
+                        .replace(/csc\(/g, '1/Math.sin(')
+                        .replace(/cot\(/g, '1/Math.tan(')
+                        .replace(/sec\(/g, '1/Math.cos(')
+                        );
+                    // Calculate points on canvas and add points to the path
+                    // Multiply by x - xMin so left point starts at zero
+                    // Multiply by yMax - y so bottom point starts at zero
+                    // Canvases start at top left so we multiply (y - yMax) by -1
+                    var canvasX = xscale * (x - xMin);
+                    var canvasY = yscale * (yMax - y);
+                    context.lineTo(canvasX, canvasY);
+                }
+                // Draw created path on canvas
+                context.stroke();
+            }
+        </script>
+    </section>
+        <ul>Notes:
+            <li>Multiplications should use the * symbol, like so: 5*x</li>
+            <li>Exponents should use the ^ symbol, like so: x^2</li>
+            <li>Trigonometric functions should be entered with parentheses around the x, like so: cos(x)</li>
+            </ul>
+    <footer>
+        <p>Created by Sean Gaughan</p>
+     </footer>
+</body>
+</html>

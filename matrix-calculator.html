@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="utf-8">
+   <title>Matrix Calculator</title>
+   <style>
+     .hidden {
+       display: none;
+     }
+     </style>
+     <link rel="stylesheet" href="matrix-calculator.css" />
+     <nav>
+      <ul>
+        <a href="online-calculator.html">Home Page</a>
+        <a href="simple-calculator.html">Simple Calculator</a>
+        <a href="2dgraphing-calculator.html">2D Graphing</a>
+        <a href="3dgraphing-calculator.html">3D Graphing</a>
+      </ul>
+      </nav>
+</head>
+<body>
+  <header>
+    <h1>Matrix Calculator</h1>
+  </header>
+  <section>
+    <!-- Create the dropdown menu -->
+    <label for="operation-select">Operation:</label>
+      <select name="operations" id="operation-select">
+      <option value="">--Select an operation--</option>
+      <option value="Addition">Addition</option>
+      <option value="Multiplication">Multiplication</option>
+      <!--<option value="GaussJordanElimination">Gauss-Jordan Elimination</option>-->
+      <option value="Transpose">Transpose</option>
+    </select>
+    <!-- Div with hidden attribute for addition -->
+    <div id="add" class="hidden">
+      <form>
+        <label for="rows1">Matrix 1 Rows:</label>
+        <input type="number" id="rows1" name="rows1" min="1">
+        <label for="cols1">Matrix 1 Columns:</label>
+        <input type="number" id="cols1" name="cols1" min="1"><br>
+        <label for="rows2">Matrix 2 Rows:</label>
+        <input type="number" id="rows2" name="rows2" min="1">
+        <label for="cols2">Matrix 2 Columns:</label>
+        <input type="number" id="cols2" name="cols2" min="1"><br>
+        <button type="button" onclick="createMatrices()">Create Matrices</button>
+        <button type="button" onclick="addMatrices()">Calculate</button>
+      </form>
+      <div id="matrix-input"></div>
+      <script>
+        let matrix1, matrix2, result, rows1, cols1, rows2, cols2;
+        function createMatrices(data) {
+          const rows1 = document.getElementById("rows1").value;
+          const cols1 = document.getElementById("cols1").value;
+          const rows2 = document.getElementById("rows2").value;
+          const cols2 = document.getElementById("cols2").value;
+
+          if (rows1 !== rows2 || cols1 !== cols2) {
+            alert("Matrices must have the same dimensions to be added.");
+            return;
+          }
+          if (rows1 < 1 || cols1 < 1 || rows2 < 1 || cols2 < 1) {
+            alert("All matrix dimensions must be greater than 0.");
+            return;
+          }
+          const matrixInput = document.getElementById("matrix-input");
+          matrixInput.innerHTML = "";
+
+          matrix1 = [];
+          const matrix1Label = document.createElement("h2");
+          matrix1Label.innerText = "Matrix 1";
+          matrixInput.appendChild(matrix1Label);
+
+          for (let i = 0; i < rows1; i++) {
+            const row = [];
+            for (let j = 0; j < cols1; j++) {
+              const input = document.createElement("input");
+              input.type = "number";
+              input.name = "matrix1[" + i + "][" + j + "]";
+              matrixInput.appendChild(input);
+              row.push(input);
+            }
+            matrixInput.appendChild(document.createElement("br"));
+            matrix1.push(row);
+          }
+
+          matrixInput.appendChild(document.createElement("br"));
+
+          matrix2 = [];
+          const matrix2Label = document.createElement("h2");
+          matrix2Label.innerText = "Matrix 2";
+          matrixInput.appendChild(matrix2Label);
+
+          for (let i = 0; i < rows2; i++) {
+            const row = [];
+            for (let j = 0; j < cols2; j++) {
+              const input = document.createElement("input");
+              input.type = "number";
+              input.name = "matrix2[" + i + "][" + j + "]";
+              matrixInput.appendChild(input);
+              row.push(input);
+            }
+            matrixInput.appendChild(document.createElement("br"));
+            matrix2.push(row);
+          }
+
+          matrixInput.appendChild(document.createElement("br"));
+        }
+
+        function addMatrices(data) {
+          const rows1 = matrix1.length;
+          const cols1 = matrix1[0].length;
+          const rows2 = matrix2.length;
+          const cols2 = matrix2[0].length;
+
+          const matrixInput = document.getElementById("matrix-input");
+
+          // Add matrices
+          
+          const result = [];
+          const resultLabel = document.createElement("h2");
+          resultLabel.innerText = "Result";
+          matrixInput.appendChild(resultLabel);
+
+          for (let i = 0; i < rows1; i++) {
+            const row = [];
+            for (let j = 0; j < cols1; j++) {
+              const sum = Number(matrix1[i][j].value) + Number(matrix2[i][j].value);
+              const input = document.createElement("input");
+              input.type = "number";
+              input.value = sum;
+              input.disabled = true;
+              row.push(input);
+              matrixInput.appendChild(input);
+            }
+            matrixInput.appendChild(document.createElement("br"));
+            result.push(row);
+          }
+        }
+        </script>
+    </div>
+    <!-- Div with hidden attribute for multiplication -->
+    <div id="multiply" class="hidden">
+      <form>
+        <label for="mrows1">Matrix 1 Rows:</label>
+        <input type="number" id="mrows1" name="mrows1" min="1">
+        <label for="mcols1">Matrix 1 Columns:</label>
+        <input type="number" id="mcols1" name="mcols1" min="1"><br>
+        <label for="mrows2">Matrix 2 Rows:</label>
+        <input type="number" id="mrows2" name="mrows2" min="1">
+        <label for="mcols2">Matrix 2 Columns:</label>
+        <input type="number" id="mcols2" name="mcols2" min="1"><br>
+        <button type="button" onclick="createMMatrices()">Create Matrices</button>
+        <button type="button" onclick="multiplyMatrices()">Calculate</button>
+      </form>
+      <div id="matrix-input-multiply"></div>
+      <script>
+        let mmatrix1, mmatrix2, mresult, mrows1, mcols1, mrows2, mcols2;
+        function createMMatrices(data) {
+          const mrows1 = document.getElementById("mrows1").value;
+          const mcols1 = document.getElementById("mcols1").value;
+          const mrows2 = document.getElementById("mrows2").value;
+          const mcols2 = document.getElementById("mcols2").value;
+
+          if (mrows1 < 1 || mcols1 < 1 || mrows2 < 1 || mcols2 < 1) {
+            alert("All matrix dimensions must be greater than 0.");
+            return;
+          }
+          if (mcols1 !== mrows2) {
+            alert("Number of columns in Matrix 1 must be equal to the number of rows in Matrix 2.");
+            return;
+          }
+          
+          const mmatrixInput = document.getElementById("matrix-input-multiply");
+          mmatrixInput.innerHTML = "";
+        
+          mmatrix1 = [];
+          const mmatrix1Label = document.createElement("h2");
+          mmatrix1Label.innerText = "Matrix 1";
+          mmatrixInput.appendChild(mmatrix1Label);
+        
+          for (let i = 0; i < mrows1; i++) {
+            const mrow = [];
+            for (let j = 0; j < mcols1; j++) {
+              const input = document.createElement("input");
+              input.type = "number";
+              input.name = "mmatrix1[" + i + "][" + j + "]";
+              mmatrixInput.appendChild(input);
+              mrow.push(input);
+            }
+            mmatrixInput.appendChild(document.createElement("br"));
+            mmatrix1.push(mrow);
+          }
+        
+          mmatrixInput.appendChild(document.createElement("br"));
+        
+          mmatrix2 = [];
+          const mmatrix2Label = document.createElement("h2");
+          mmatrix2Label.innerText = "Matrix 2";
+          mmatrixInput.appendChild(mmatrix2Label);
+        
+          for (let i = 0; i < mrows2; i++) {
+            const mrow = [];
+            for (let j = 0; j < mcols2; j++) {
+              const input = document.createElement("input");
+              input.type = "number";
+              input.name = "mmatrix2[" + i + "][" + j + "]";
+              mmatrixInput.appendChild(input);
+              mrow.push(input);
+            }
+            mmatrixInput.appendChild(document.createElement("br"));
+            mmatrix2.push(mrow);
+          }
+        
+          mmatrixInput.appendChild(document.createElement("br"));
+          console.log(mmatrixInput);
+        }
+        
+        function multiplyMatrices(data) {
+          const mrows1 = mmatrix1.length;
+          const mcols1 = mmatrix1[0].length;
+          const mrows2 = mmatrix2.length;
+          const mcols2 = mmatrix2[0].length;
+          console.log(mmatrix1);
+          console.log(mmatrix2);
+        
+          const mmatrixInput = document.getElementById("matrix-input-multiply");
+        
+          // Multiply matrices
+          const mresult = [];
+          const mresultLabel = document.createElement("h2");
+          mresultLabel.innerText = "Result";
+          mmatrixInput.appendChild(mresultLabel);
+        
+          for (let i = 0; i < mrows1; i++) {
+            const mrow = [];
+            for (let j = 0; j < mcols2; j++) {
+              let sum = 0;
+              for (let k = 0; k < mcols1; k++) {
+                sum += Number(mmatrix1[i][k].value) * Number(mmatrix2[k][j].value);
+              }
+              const input = document.createElement("input");
+              input.type = "number";
+              input.value = sum;
+              input.disabled = true;
+              mrow.push(input);
+              mmatrixInput.appendChild(input);
+            }
+            mmatrixInput.appendChild(document.createElement("br"));
+            mresult.push(mrow);
+          }
+          console.log(mresult);
+        }
+        </script>
+        
+    </div>
+    <!-- Div with hidden attribute for Gauss Jordan Elimination -->
+    <!--<div id="GJE" class="hidden">
+      <form>
+        <label for="grows">Matrix Rows:</label>
+        <input type="number" id="grows" name="grows" min="1">
+        <label for="gcols">Matrix Rows:</label>
+        <input type="number" id="gcols" name="gcols" min="1"><br><br>
+        <button type="button" onclick="createGMatrix()">Create Matrix</button>
+        <button type="button" onclick="gje()">Calculate</button>
+      </form>
+      <div id="matrix-input-gje"></div>
+      <script>
+        let gmatrix, gmatrixcopy, gresult, grows, gcols;
+        function createGMatrix() {
+          grows = document.getElementById("grows").value;
+          gcols = document.getElementById("gcols").value;
+          console.log(grows);
+          console.log(gcols);
+
+
+          if (grows < 1 || gcols < 1) {
+            alert("All matrix dimensions must be greater than 0.");
+            return;
+          }
+
+          const gmatrixInput = document.getElementById("matrix-input-gje");
+          gmatrixInput.innerHTML = "";
+        
+          gmatrix = [];
+          const gmatrixLabel = document.createElement("h2");
+          gmatrixLabel.innerText = "Matrix";
+          gmatrixInput.appendChild(gmatrixLabel);
+        
+          for (let i = 0; i < grows; i++) {
+            const grow = [];
+            for (let j = 0; j < gcols; j++) {
+              const input = document.createElement("input");
+              input.type = "number";
+              input.name = "gmatrix[" + i + "][" + j + "]";
+              gmatrixInput.appendChild(input);
+              grow.push(input);
+            }
+            gmatrixInput.appendChild(document.createElement("br"));
+            gmatrix.push(grow);
+          }
+        
+          gmatrixInput.appendChild(document.createElement("br"));
+          console.log(gmatrixInput);
+        }
+        
+        function gje(data) {
+          const grows = gmatrix.length;
+          const gcols = gmatrix[0].length;
+          console.log(gmatrix);
+
+          gmatrixcopy = [];
+          for (var i = 0; i < grows; i++) {
+              gmatrixcopy[i] = gmatrix[i].slice();
+          }
+          console.log(gmatrixcopy);
+
+          // make sure all elements are numbers
+          for (let i = 0; i < grows; i++) {
+              for (let j = 0; j < gcols; j++) {
+                  gmatrixcopy[i][i].value = parseFloat(gmatrixcopy[i][j].value);
+              }
+          }
+
+          // Loop over all rows
+          for (let i = 0; i < grows; i++) {
+            // Find row with the largest element in the current row
+            let maxRowIndex = i;
+            let maxVal = Math.abs(Number(gmatrixcopy[i][i].value));
+            for (let j = i + 1; j < grows; j++) {
+                if (Math.abs(Number(gmatrixcopy[j][i].value)) > maxVal) {
+                  maxRowIndex = j;
+                  maxVal = Math.abs(Number(gmatrixcopy[j][i]).value);
+                }
+            }
+
+            // Swap the rows if necessary
+            if (maxRowIndex != i) {
+                const temp  = gmatrixcopy[i];
+                gmatrixcopy[i].value = gmatrixcopy[maxRowIndex];
+                gmatrixcopy[maxRowIndex].value = temp;
+            }
+
+            // Make the diagonal element equal to 1
+            const div = Number(gmatrixcopy[i][i].value);
+            for (let j = i; j < gcols; j++) {
+              // gmatrixcopy[i][j] = Number(gmatrixcopy[i][j]) / div;
+                //gmatrixcopy[i][j].value = Number(gmatrixcopy[i][j]) / (div === 0 ? 1e-10 : div);
+                gmatrixcopy[i][j] = Number(gmatrixcopy[i][j]) / div;
+            }
+
+            // Subtract multiples of the current row from all other rows to make
+            // the elements below and above the diagonal equal to zero
+            for (let j = 0; j < grows; j++) {
+                if (j !== i) {
+                    const mult = Number(gmatrixcopy[j][i].value);
+                    for (let k = i; k < gcols; k++) {
+                      gmatrixcopy[j][k].value -= mult * Number(gmatrixcopy[i][k].value);
+                    }
+                }
+            }
+          }
+          console.log(gmatrixcopy);
+
+          const gmatrixInput = document.getElementById("matrix-input-gje");
+
+          const gresult = [];
+          const gresultLabel = document.createElement("h2");
+          gresultLabel.innerText = "Result";
+          gmatrixInput.appendChild(gresultLabel);
+
+          // Output gmatrix
+          for (let i = 0; i < grows; i++) {
+            const grow = [];
+            for (let j = 0; j < gcols; j++) {
+              const input = document.createElement("input");
+              input.type = "number";
+              let element = Number(gmatrixcopy[i][j].value);
+              input.value = element;
+              input.disabled = true;
+              grow.push(input);
+              gmatrixInput.appendChild(input);
+            }
+            gmatrixInput.appendChild(document.createElement("br"));
+            gresult.push(grow);
+          }
+          console.log(gresult);
+        }
+        </script>
+    </div>-->
+    <!-- Div with hidden attribute for transpose -->
+    <div id="trans" class="hidden">
+      <form>
+        <label for="trows">Matrix Rows:</label>
+        <input type="number" id="trows" name="trows" min="1">
+        <label for="tcols">Matrix Rows:</label>
+        <input type="number" id="tcols" name="tcols" min="1"><br><br>
+        <button type="button" onclick="createTMatrix()">Create Matrix</button>
+        <button type="button" onclick="transposeMatrix()">Transpose</button>
+      </form>
+      <div id="matrix-input-transpose"></div>
+      <script>
+        let tmatrix, tresult, trows, tcols;
+        function createTMatrix() {
+          trows = document.getElementById("trows").value;
+          tcols = document.getElementById("tcols").value;
+          console.log(trows);
+          console.log(tcols);
+
+          if (trows < 1 || tcols < 1) {
+            alert("All matrix dimensions must be greater than 0.");
+            return;
+          }
+
+          const tmatrixInput = document.getElementById("matrix-input-transpose");
+          tmatrixInput.innerHTML = "";
+        
+          tmatrix = [];
+          const tmatrixLabel = document.createElement("h2");
+          tmatrixLabel.innerText = "Matrix";
+          tmatrixInput.appendChild(tmatrixLabel);
+        
+          for (let i = 0; i < trows; i++) {
+            const trow = [];
+            for (let j = 0; j < tcols; j++) {
+              const input = document.createElement("input");
+              input.type = "number";
+              input.name = "tmatrix[" + i + "][" + j + "]";
+              tmatrixInput.appendChild(input);
+              trow.push(input);
+            }
+            tmatrixInput.appendChild(document.createElement("br"));
+            tmatrix.push(trow);
+          }
+        
+          tmatrixInput.appendChild(document.createElement("br"));
+          console.log(tmatrixInput);
+        }
+
+        function transposeMatrix() {
+          const trows = tmatrix.length;
+          const tcols = tmatrix[0].length;
+          console.log(tmatrix);
+          
+          const tmatrixInput = document.getElementById("matrix-input-transpose");
+
+          const tresult = [];
+          const tresultLabel = document.createElement("h2");
+          tresultLabel.innerText = "Result";
+          tmatrixInput.appendChild(tresultLabel);
+
+          for (let i = 0; i < tcols; i++) {
+            const trow = [];
+            for (let j = 0; j < trows; j++) {
+              let val = Number(tmatrix[j][i].value);
+              const input = document.createElement("input");
+              input.type = "number";
+              input.value = val;
+              input.disabled = true;
+              trow.push(input);
+              tmatrixInput.appendChild(input);
+            }
+            tmatrixInput.appendChild(document.createElement("br"));
+            tresult.push(trow);
+          }
+          console.log(tresult);
+        }
+        </script>
+
+    </div>
+    <!-- HTML Script to alternate which divs are hidden to show selected operation -->
+    <script>
+      const operationselect = document.getElementById("operation-select");
+      const add = document.getElementById("add");
+      const multiply = document.getElementById("multiply");
+      //const GJE = document.getElementById("GJE");
+      const trans = document.getElementById("trans");
+
+      operationselect.addEventListener("change", function() {
+        if (operationselect.value === "Addition") {
+          add.classList.remove("hidden");
+          multiply.classList.add("hidden");
+          //GJE.classList.add("hidden");
+          trans.classList.add("hidden");
+        } else if (operationselect.value === "Multiplication") {
+          add.classList.add("hidden");
+          multiply.classList.remove("hidden");
+          //GJE.classList.add("hidden");
+          trans.classList.add("hidden");
+        } /*else if (operationselect.value === "GaussJordanElimination") {
+          add.classList.add("hidden");
+          multiply.classList.add("hidden");
+          GJE.classList.remove("hidden");
+          trans.classList.add("hidden");
+        }*/
+        else if (operationselect.value === "Transpose") {
+          add.classList.add("hidden");
+          multiply.classList.add("hidden");
+          //GJE.classList.add("hidden");
+          trans.classList.remove("hidden");
+        }
+      });
+      </script>
+  </section>
+  <footer>
+    <p>Created by Sean Gaughan</p>
+  </footer>
+</body>
+</html>
